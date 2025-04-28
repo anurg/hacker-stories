@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 const App = () => {
   const stories = [
     {
@@ -19,13 +19,16 @@ const App = () => {
     },
   ];
  
-  const [searchTerm, setSearchTerm] = useState("React");
+  const [searchTerm, setSearchTerm] = useState(localStorage.getItem("search")||"React");
  
   const handleSearch = (event) => {
-
     setSearchTerm(event.target.value)
-
+    
   };
+  useEffect(()=>{
+    localStorage.setItem("search",event.target.value)
+  },[searchTerm]);
+  
   const filteredStories = stories.filter(story=>story.title.toLowerCase().includes(searchTerm.toLowerCase()))
   return (
     <div>
@@ -38,41 +41,38 @@ const App = () => {
   );
 };
 
-const Search = (props) => {
-
-  return (
+const Search = ({onSearch,searchTerm}) => 
+   (
     <div>
       <label htmlFor="search">Search:</label>
-      <input type="text" id="search" onChange={props.onSearch} value={props.searchTerm} />
+      <input type="text" id="search" onChange={onSearch} value={searchTerm} />
       <p>
-        Seraching for <strong>{props.searchTerm}</strong>
+        Seraching for <strong>{searchTerm}</strong>
       </p>
     </div>
   );
-};
 
-const List = (props) => {
+
+const List = ({list}) => {
   return (
     <>
       <ul>
-        {props.list.map((item) => (
-          <Item key={item.objectID} item={item} />
-        ))}
+        {list.map((item) => <Item key={item.objectID} item={item}/>)}
       </ul>
     </>
   );
 };
 
-const Item = (props) => {
+const Item = ({item}) => {
   return (
     <>
       <li>
         <span>
-          <a href={props.item.url}>{props.item.title}</a>
+          <a href={item.url}>{item.title}</a>
         </span>
-        <span>{props.item.author}</span>
-        <span>{props.item.num_comments}</span>
-        <span>{props.item.points}</span>
+        <span>{item.author}</span>
+        <span>{item.num_comments}</span>
+        <span>{item.points}</span>
       </li>
     </>
   );
