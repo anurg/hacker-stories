@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Children, useEffect, useState } from "react";
 const App = () => {
   const stories = [
     {
@@ -37,20 +37,31 @@ const App = () => {
     <div>
       <h1>My Hacker Stories - {searchTerm} </h1>
 
-      <Search onSearch={handleSearch} searchTerm={searchTerm} />
+      <InputWithLabel id="search" onInputChange={handleSearch} value={searchTerm} isFocused={false} >
+      <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+      </ul>
+      </InputWithLabel>
       <hr />
       <List list={filteredStories} />
     </div>
   );
 };
 
-const Search = ({ onSearch, searchTerm }) => (
+const InputWithLabel = ({ id, value,type="text", onInputChange, isFocused, children }) => (
   <>
-    <label htmlFor="search">Search:</label>
-    <input type="text" id="search" onChange={onSearch} value={searchTerm} />
-    <p>
-      Seraching for <strong>{searchTerm}</strong>
-    </p>
+    <label htmlFor={id}>Search:</label>
+    &nbsp;
+    <input type={type} id={id} onChange={onInputChange} value={value} autoFocus={isFocused} />
+    <div>
+        {children}
+    </div>
+    
+    
+
   </>
 );
 
