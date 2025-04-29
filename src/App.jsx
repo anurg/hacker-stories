@@ -1,6 +1,6 @@
 import { Children, useEffect, useState } from "react";
 const App = () => {
-  const stories = [
+  const initialStories = [
     {
       title: "React",
       url: "https://react.dev",
@@ -18,11 +18,18 @@ const App = () => {
       objectID: 1,
     },
   ];
+  const [stories, setStories] = useState(initialStories);
 
   const [searchTerm, setSearchTerm] = useState(
     localStorage.getItem("search") || "React"
   );
+  const handleRemoveStory = (item) => {
+    const newStories = stories.filter(
+      (story) => item.objectID !== story.objectID
+    );
 
+    setStories(newStories);
+  };
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -30,54 +37,60 @@ const App = () => {
     localStorage.setItem("search", searchTerm);
   }, [searchTerm]);
 
-  const filteredStories = stories.filter((story) =>
+  const filteredStories = initialStories.filter((story) =>
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (
     <div>
       <h1>My Hacker Stories - {searchTerm} </h1>
 
-      <InputWithLabel id="search" onInputChange={handleSearch} value={searchTerm} isFocused={false} >
-      <ul>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-      </ul>
-      </InputWithLabel>
+      <InputWithLabel
+        id="search"
+        onInputChange={handleSearch}
+        value={searchTerm}
+        isFocused={false}
+      ></InputWithLabel>
       <hr />
-      <List list={filteredStories} />
+      <List list={filteredStories} onRemoveItem={handleRemoveStory} />
     </div>
   );
 };
 
-const InputWithLabel = ({ id, value,type="text", onInputChange, isFocused, children }) => (
+const InputWithLabel = ({
+  id,
+  value,
+  type = "text",
+  onInputChange,
+  isFocused,
+  children,
+}) => (
   <>
     <label htmlFor={id}>Search:</label>
     &nbsp;
-    <input type={type} id={id} onChange={onInputChange} value={value} autoFocus={isFocused} />
-    <div>
-        {children}
-    </div>
-    
-    
-
+    <input
+      type={type}
+      id={id}
+      onChange={onInputChange}
+      value={value}
+      autoFocus={isFocused}
+    />
+    <div>{children}</div>
   </>
 );
 
-const List = ({ list }) => {
+const List = ({ list, onRemoveItem }) => {
   return (
     <>
       <ul>
         {list.map((item) => (
-          <Item key={item.objectID} item={item} />
+          <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem} />
         ))}
       </ul>
     </>
   );
 };
 
-const Item = ({ item }) => {
+const Item = ({ item, onRemoveItem }) => {
   return (
     <>
       <li>
@@ -87,6 +100,11 @@ const Item = ({ item }) => {
         <span>{item.author}</span>
         <span>{item.num_comments}</span>
         <span>{item.points}</span>
+        <span>
+          <button type="button" onClick={() => onRemoveItem(item)}>
+            Delete
+          </button>
+        </span>
       </li>
     </>
   );
