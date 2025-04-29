@@ -18,7 +18,11 @@ const App = () => {
       objectID: 1,
     },
   ];
-  const [stories, setStories] = useState(initialStories);
+  const getAsyncStories = () =>
+    new Promise((resolve) =>
+      setTimeout(() => resolve({ data: { stories: initialStories } }), 2000)
+    );
+  const [stories, setStories] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState(
     localStorage.getItem("search") || "React"
@@ -38,6 +42,11 @@ const App = () => {
     localStorage.setItem("search", searchTerm);
   }, [searchTerm]);
 
+  useEffect(() => {
+    getAsyncStories().then((result) => {
+      setStories(result.data.stories);
+    });
+  }, []);
   const filteredStories = stories.filter((story) =>
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
