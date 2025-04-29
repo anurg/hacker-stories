@@ -24,10 +24,11 @@ const App = () => {
     localStorage.getItem("search") || "React"
   );
   const handleRemoveStory = (item) => {
+    console.log(item.objectID);
     const newStories = stories.filter(
       (story) => item.objectID !== story.objectID
     );
-
+    console.log(newStories);
     setStories(newStories);
   };
   const handleSearch = (event) => {
@@ -37,7 +38,7 @@ const App = () => {
     localStorage.setItem("search", searchTerm);
   }, [searchTerm]);
 
-  const filteredStories = initialStories.filter((story) =>
+  const filteredStories = stories.filter((story) =>
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (
@@ -101,7 +102,13 @@ const Item = ({ item, onRemoveItem }) => {
         <span>{item.num_comments}</span>
         <span>{item.points}</span>
         <span>
-          <button type="button" onClick={() => onRemoveItem(item)}>
+          <button
+            type="button"
+            onClick={() => {
+              onRemoveItem(item);
+              console.log(item);
+            }}
+          >
             Delete
           </button>
         </span>
