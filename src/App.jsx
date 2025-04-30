@@ -19,9 +19,7 @@ const App = () => {
     },
   ];
   const getAsyncStories = () =>
-    new Promise((resolve) =>
-      setTimeout(() => resolve({ data: { stories: initialStories } }), 2000)
-    );
+    new Promise((resolve) => resolve({ data: { stories: initialStories } }));
   const [stories, setStories] = useState([]);
   const [isError, setIsError] = useState(false);
   const [searchTerm, setSearchTerm] = useState(
