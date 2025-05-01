@@ -1,5 +1,4 @@
 import * as React from "react";
-import { isCSSRequest } from "vite";
 
 const initialStories = [
   {
@@ -34,12 +33,12 @@ const storiesReducer = (state, action) => {
         isLoading: true,
         isError: false,
       };
-    case "STOREIS_FETCH_SUCCESS":
+    case "STORIES_FETCH_SUCCESS":
       return {
         ...state,
         isLoading: false,
         isError: false,
-        stories: action.payload,
+        data: action.payload,
       };
     case "STORIES_FETCH_FAILURE":
       return {
@@ -89,9 +88,8 @@ const App = () => {
           type: "STORIES_FETCH_SUCCESS",
           payload: result.data.stories,
         });
-        dispatchStories({ type: "STOREIES_FETCH_FAILURE" });
       })
-      .catch(() => setIsError(true));
+      .catch(() => dispatchStories({ type: "STORIES_FETCH_FAILURE" }));
   }, []);
 
   const handleRemoveStory = (item) => {
