@@ -62,26 +62,17 @@ const App = () => {
   const handleSearchSubmit = () => {
     setUrl(`${API_END_POINT}${searchTerm}`);
   };
-  const handleFetchStories = React.useCallback(() => {
-    // if (searchTerm === "") return;
-    dispatchStories({ type: "STORIES_FETCH_INIT" });
-    // fetch(url)
-    //   .then((response) => response.json())
-    //   .then((result) => {
-    //     dispatchStories({
-    //       type: "STORIES_FETCH_SUCCESS",
-    //       payload: result.hits,
-    //     });
-    //   })
-    axios
-      .get(url)
-      .then((result) => {
-        dispatchStories({
-          type: "STORIES_FETCH_SUCCESS",
-          payload: result.data.hits,
-        });
-      })
-      .catch(() => dispatchStories({ type: "STORIES_FETCH_FAILURE" }));
+  const handleFetchStories = React.useCallback(async () => {
+    try {
+      dispatchStories({ type: "STORIES_FETCH_INIT" });
+      const result = await axios.get(url);
+      dispatchStories({
+        type: "STORIES_FETCH_SUCCESS",
+        payload: result.data.hits,
+      });
+    } catch {
+      dispatchStories({ type: "STORIES_FETCH_FAILURE" });
+    }
   }, [url]);
 
   React.useEffect(() => {
