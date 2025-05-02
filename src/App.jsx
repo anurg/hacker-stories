@@ -59,8 +59,9 @@ const App = () => {
   const handleSearchInput = (event) => {
     setSearchTerm(event.target.value);
   };
-  const handleSearchSubmit = () => {
+  const handleSearchSubmit = (event) => {
     setUrl(`${API_END_POINT}${searchTerm}`);
+    event.preventDefault();
   };
   const handleFetchStories = React.useCallback(async () => {
     try {
@@ -97,18 +98,20 @@ const App = () => {
   return (
     <div>
       <h1>My Hacker Stories</h1>
+      <form onSubmit={handleSearchSubmit}>
+        <InputWithLabel
+          id="search"
+          value={searchTerm}
+          isFocused
+          onInputChange={handleSearchInput}
+        >
+          <strong>Search:</strong>
+        </InputWithLabel>
+        <button type="submit" disabled={!searchTerm}>
+          Submit
+        </button>
+      </form>
 
-      <InputWithLabel
-        id="search"
-        value={searchTerm}
-        isFocused
-        onInputChange={handleSearchInput}
-      >
-        <strong>Search:</strong>
-      </InputWithLabel>
-      <button type="button" disabled={!searchTerm} onClick={handleSearchSubmit}>
-        Submit
-      </button>
       <hr />
 
       {stories.isError && <p>Something went wrong ...</p>}
