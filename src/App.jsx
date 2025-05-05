@@ -63,6 +63,8 @@ const App = () => {
     setUrl(`${API_END_POINT}${searchTerm}`);
     event.preventDefault();
   };
+  const searchAction = () => setUrl(`${API_END_POINT}${searchTerm}`);
+
   const handleFetchStories = React.useCallback(async () => {
     try {
       dispatchStories({ type: "STORIES_FETCH_INIT" });
@@ -91,27 +93,14 @@ const App = () => {
     setSearchTerm(event.target.value);
   };
 
-  // const searchedStories = stories.data.filter((story) =>
-  //   story.title.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
-
   return (
     <div>
       <h1>My Hacker Stories</h1>
-      <form onSubmit={handleSearchSubmit}>
-        <InputWithLabel
-          id="search"
-          value={searchTerm}
-          isFocused
-          onInputChange={handleSearchInput}
-        >
-          <strong>Search:</strong>
-        </InputWithLabel>
-        <button type="submit" disabled={!searchTerm}>
-          Submit
-        </button>
-      </form>
-
+      <SearchForm
+        searchTerm={searchTerm}
+        onSearchInput={handleSearchInput}
+        searchAction={searchAction}
+      />
       <hr />
 
       {stories.isError && <p>Something went wrong ...</p>}
@@ -124,6 +113,22 @@ const App = () => {
     </div>
   );
 };
+
+const SearchForm = ({ searchTerm, onSearchInput, searchAction }) => (
+  <form action={searchAction}>
+    <InputWithLabel
+      id="search"
+      value={searchTerm}
+      isFocused
+      onInputChange={onSearchInput}
+    >
+      <strong>Search:</strong>
+    </InputWithLabel>
+    <button type="submit" disabled={!searchTerm}>
+      Submit
+    </button>
+  </form>
+);
 
 const InputWithLabel = ({
   id,
